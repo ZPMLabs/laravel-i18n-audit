@@ -1,0 +1,40 @@
+{
+    "name": "zpmlabs/laravel-i18n-audit",
+    "description": "Laravel package to audit translation usage, missing keys, and unused keys.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "nikic/php-parser": "^5.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^10.5|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ZPMLabs\\LaravelI18nAudit\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZPMLabs\\LaravelI18nAudit\\Tests\\": "tests/"
+        },
+        "exclude-from-classmap": [
+            "tests/Fixtures/fake-app/app/"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ZPMLabs\\LaravelI18nAudit\\TranslationScannerServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

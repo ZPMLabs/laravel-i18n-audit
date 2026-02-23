@@ -91,13 +91,16 @@ final class MissingTranslationPopulator
 
                 if ($localeUpdated) {
                     ksort($existingJson);
-                    if (!is_dir(dirname($jsonFilePath))) {
-                        mkdir(dirname($jsonFilePath), 0777, true);
-                    }
-                    file_put_contents(
+                    $this->ensureDirectoryExists(dirname($jsonFilePath));
+
+                    $written = @file_put_contents(
                         $jsonFilePath,
                         json_encode($existingJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL
                     );
+
+                    if ($written === false) {
+                        throw new \RuntimeException(sprintf('Failed to write JSON lang file: %s', $jsonFilePath));
+                    }
                 }
             }
 
@@ -154,12 +157,33 @@ final class MissingTranslationPopulator
      */
     private function writePhpLangFile(string $filePath, array $data): void
     {
-        if (!is_dir(dirname($filePath))) {
-            mkdir(dirname($filePath), 0777, true);
-        }
+        $this->ensureDirectoryExists(dirname($filePath));
 
         $code = "<?php\n\nreturn " . $this->exportArray($data) . ";\n";
-        file_put_contents($filePath, $code);
+        $written = @file_put_contents($filePath, $code);
+
+        if ($written === false) {
+            throw new \RuntimeException(sprintf('Failed to write PHP lang file: %s', $filePath));
+        }
+    }
+
+    private function ensureDirectoryExists(string $directory): void
+    {
+        $normalized = trim($directory);
+
+        if ($normalized === '' || $normalized === '.') {
+            throw new \RuntimeException('Invalid target directory for translation write operation.');
+        }
+
+        if (is_dir($normalized)) {
+            return;
+        }
+
+        $created = @mkdir($normalized, 0777, true);
+
+        if ($created === false && !is_dir($normalized)) {
+            throw new \RuntimeException(sprintf('Failed to create directory for translation write operation: %s', $normalized));
+        }
     }
 
     /**

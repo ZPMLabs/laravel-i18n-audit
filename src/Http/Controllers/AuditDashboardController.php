@@ -99,8 +99,15 @@ final class AuditDashboardController
             $missingByLocale = [];
         }
 
-        $result = $this->missingPopulator->populate($missingByLocale, $langPath, $template);
-        $auditExitCode = Artisan::call('i18n:audit');
+        try {
+            $result = $this->missingPopulator->populate($missingByLocale, $langPath, $template);
+            $auditExitCode = Artisan::call('i18n:audit');
+        } catch (\Throwable $throwable) {
+            return redirect()->route('i18n-audit.latest')->with(
+                'i18n_audit_status',
+                'Auto populate failed: ' . $throwable->getMessage()
+            );
+        }
 
         return redirect()->route('i18n-audit.latest')->with(
             'i18n_audit_status',
@@ -128,8 +135,15 @@ final class AuditDashboardController
             $unusedByLocale = [];
         }
 
-        $result = $this->unusedRemover->remove($unusedByLocale, $langPath);
-        $auditExitCode = Artisan::call('i18n:audit');
+        try {
+            $result = $this->unusedRemover->remove($unusedByLocale, $langPath);
+            $auditExitCode = Artisan::call('i18n:audit');
+        } catch (\Throwable $throwable) {
+            return redirect()->route('i18n-audit.latest')->with(
+                'i18n_audit_status',
+                'Remove unused failed: ' . $throwable->getMessage()
+            );
+        }
 
         return redirect()->route('i18n-audit.latest')->with(
             'i18n_audit_status',

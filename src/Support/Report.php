@@ -8,6 +8,7 @@ final class Report
 {
     /**
      * @param array<int, string> $usedKeys
+        * @param array<string, array<int, array{file:string,line:int,column:int,char:int,source:string}>> $usedKeyLocations
      * @param array<int, array{file:string,line:int,expression:string,source:string}> $dynamicKeys
      * @param array<string, array<int, string>> $missingByLocale
      * @param array<string, array<string, array<int, array{file:string,line:int,column:int,char:int,source:string}>>> $missingKeyLocationsByLocale
@@ -17,6 +18,7 @@ final class Report
      */
     public function __construct(
         private readonly array $usedKeys,
+        private readonly array $usedKeyLocations,
         private readonly array $dynamicKeys,
         private readonly array $missingByLocale,
         private readonly array $missingKeyLocationsByLocale,
@@ -31,6 +33,7 @@ final class Report
     {
         return [
             'usedKeys' => $this->usedKeys,
+            'usedKeyLocations' => $this->usedKeyLocations,
             'dynamicKeys' => $this->dynamicKeys,
             'missingByLocale' => $this->missingByLocale,
             'missingKeyLocationsByLocale' => $this->missingKeyLocationsByLocale,
@@ -44,6 +47,12 @@ final class Report
     public function usedKeys(): array
     {
         return $this->usedKeys;
+    }
+
+    /** @return array<string, array<int, array{file:string,line:int,column:int,char:int,source:string}>> */
+    public function usedKeyLocations(): array
+    {
+        return $this->usedKeyLocations;
     }
 
     /**

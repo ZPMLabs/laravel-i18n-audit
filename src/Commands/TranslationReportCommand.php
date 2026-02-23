@@ -112,6 +112,7 @@ final class TranslationReportCommand extends Command
 
         $report = new Report(
             usedKeys: $usedKeys,
+            usedKeyLocations: $usedKeyLocations,
             dynamicKeys: $scanResult->getDynamicKeys(),
             missingByLocale: $diff['missingByLocale'],
             missingKeyLocationsByLocale: $diff['missingKeyLocationsByLocale'],

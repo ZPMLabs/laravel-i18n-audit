@@ -43,6 +43,11 @@ final class MissingTranslationPopulator
                     continue;
                 }
 
+                if ($this->isNonFileGroupKey($group)) {
+                    $jsonKeys[] = $key;
+                    continue;
+                }
+
                 $phpBuckets[$group][] = $parts;
             }
 
@@ -120,6 +125,19 @@ final class MissingTranslationPopulator
     private function isJsonLikeKey(string $key): bool
     {
         return str_contains($key, ' ');
+    }
+
+    private function isNonFileGroupKey(string $group): bool
+    {
+        if (str_contains($group, '::')) {
+            return true;
+        }
+
+        if (str_contains($group, '/') || str_contains($group, '\\')) {
+            return true;
+        }
+
+        return (bool) preg_match('/[<>:"|?*]/', $group);
     }
 
     /**

@@ -75,6 +75,34 @@ JSON);
         $this->deleteDirectory($baseDir);
     }
 
+    public function test_it_stores_namespaced_keys_in_json_file(): void
+    {
+        $baseDir = $this->makeTempDir('i18n_populator_namespaced_');
+        $langPath = $baseDir . DIRECTORY_SEPARATOR . 'lang';
+        mkdir($langPath, 0777, true);
+
+        $populator = new MissingTranslationPopulator();
+        $key = 'filament-panels::auth/pages/edit-profile.form.actions.save.label';
+
+        $result = $populator->populate([
+            'en' => [$key],
+        ], $langPath, 'Miissing Translation for {$locale}');
+
+        self::assertSame(1, $result['created']);
+        self::assertSame(['en'], $result['updatedLocales']);
+
+        $jsonPath = $langPath . DIRECTORY_SEPARATOR . 'en.json';
+        self::assertFileExists($jsonPath);
+
+        $json = json_decode((string) file_get_contents($jsonPath), true);
+        self::assertIsArray($json);
+        self::assertSame('Miissing Translation for en', $json[$key]);
+
+        self::assertDirectoryDoesNotExist($langPath . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . 'filament-panels::auth');
+
+        $this->deleteDirectory($baseDir);
+    }
+
     private function makeTempDir(string $prefix): string
     {
         $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $prefix . uniqid('', true);

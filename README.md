@@ -1,3 +1,6 @@
+<img width="1346" height="1274" alt="image" src="https://github.com/user-attachments/assets/979aaced-50ee-474c-a6a8-905145abdd69" />
+<img width="1296" height="1274" alt="image" src="https://github.com/user-attachments/assets/a6b1f3bc-2a82-4875-89bb-77e9fea55e97" />
+
 # Laravel I18n Audit
 
 Cross-platform Laravel package for scanning translation usage in source code and comparing it against available keys in `lang/` files.
